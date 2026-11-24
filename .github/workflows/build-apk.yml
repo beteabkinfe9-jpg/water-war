@@ -24,11 +24,11 @@ jobs:
 
       - name: Extract project
         run: |
-          unzip -q water_war_flutter_fixed.zip -d extracted
+          
 
       - name: Prepare Android project
         working-directory: extracted/water_war_flutter
-        run: |
+        run: |unzip -q water_war_flutter_fixed_v2.zip -d extracted
           flutter create --platforms=android --org com.waterwar --project-name water_war .
           flutter pub get
 
