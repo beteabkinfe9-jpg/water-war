@@ -1,0 +1,42 @@
+
+name: Build WATER WAR APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Extract project
+        run: |
+          unzip -q water_war_flutter_fixed.zip -d extracted
+
+      - name: Prepare Android project
+        working-directory: extracted/water_war_flutter
+        run: |
+          flutter create --platforms=android --org com.waterwar --project-name water_war .
+          flutter pub get
+
+      - name: Build APK
+        working-directory: extracted/water_war_flutter
+        run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WATER-WAR-APK
+          path: extracted/water_war_flutter/build/app/outputs/flutter-apk/app-release.apk
